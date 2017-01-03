@@ -40,4 +40,5 @@ def get_rst_class(sign1, sign2=''):
 
 
 def parse(sql):
-    return transform(parser.parse(input=sql, lexer=lexer.clone(), debug=debug))
+    _ast = parser.parse(input=sql, lexer=lexer.clone(), debug=debug)
+    return transform(_ast)

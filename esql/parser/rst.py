@@ -1,5 +1,7 @@
-
 from typing import List
+from esql.parser import ast
+from esql.parser.ast import TK
+from esql.parser.utility import *
 
 
 class Node(object):
@@ -11,52 +13,34 @@ class Node(object):
 class TableName(Node):
     __slots__ = ('index_name', 'doc_type')
 
-    def __init__(self, index_name=None, doc_type=None):
-        self.index_name = index_name
-        self.doc_type = doc_type
+    def __init__(self, tree):
+        for item in tree:
+            if item.type == TK.DOT:
+                self.index_name = item.children[0].value
+                self.doc_type = item.children[1].value
 
 
-class FieldName(Node):
-    __slots__ = ('name', 'is_object')
+class FieldDefine(Node):
+    __slots__ = ('name', 'type')
 
-    def __init__(self, name=None, is_object: bool=None):
-        self.name = name
-        self.is_object = is_object
-
-
-FieldNameList = List[FieldName]
+    def __init__(self, tree: ast.Element = None):
+        if tree.type == TK.COLUMN_DEFINE:
+            self.name = tree.value
+            self.type = tree.children[0].value
 
 
-class FieldNames(Node, FieldNameList):
-    """ FieldName List
+class TableCreate(Node):
+    """ Create Table
     """
+    __slots__ = ('table', 'fields')
 
-
-class FieldValues(Node, list):
-    """ FieldValue List
-    """
-
-
-class ShowVersion(Node):
-    """ SHOW VERSION
-    """
-    __slots__ = ()
-
-
-class Insert(Node):
-    """ INSERT
-    """
-    __slots__ = ('table', 'fields', 'values')
-
-    def __init__(self, table: TableName = None, fields: FieldNames = None, values: FieldValues = None):
+    def __init__(self, tree, table: TableName = None, fields: List[FieldDefine] = None):
         self.table = table
-        self.fields = fields
-        self.values = values
+        self.fields = fields or []
 
-        if len(fields) != len(values):
-            raise Exception('Number columns or values error!')
-
-# class Query(Node):
-#     """ SELECT
-#     """
-#     __slots__ = ('select', 'from', 'conditions', 'groups', 'limits', 'orders', 'scores', 'highlights')
+        for item in tree.children:
+            if item.type == TK.TABLE_NAME:
+                self.table = TableName(item.children)
+            elif item.type == TK.TABLE_COLUMNS:
+                for field_tree in item.children:
+                    self.fields.append(FieldDefine(field_tree))

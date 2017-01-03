@@ -8,11 +8,11 @@ app = application = Bottle()
 env = Environment()
 
 
-from esql import parser, generator
-from esql.generator import execute
+from esql import parser, processor
+from esql.processor import execute
 
 parser.init(env.config['parser'])
-generator.init()
+processor.init()
 
 
 @app.route('/es', method=('GET', 'POST'))
@@ -22,3 +22,5 @@ def es_sql():
     request_data = request.forms if request.method == 'POST' else request.query
     sql = request_data.get('sql')
     return execute(sql)
+
+execute('create table table_name.info (a string, b integer);')

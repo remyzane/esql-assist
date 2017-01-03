@@ -32,6 +32,10 @@ class Element(object):
         return cson.dumps(self.__dict__(), indent=4)
 
 
+def ele(obj) -> Element:
+    return obj
+
+
 def transform(obj: ASTNode) -> Element:
     if obj.children:
         children = []
