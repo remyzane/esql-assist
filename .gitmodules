@@ -1,0 +1,3 @@
+[submodule "libs/EsqlParser"]
+	path = libs/EsqlParser
+	url = https://github.com/unimassystem/EsqlParser.git

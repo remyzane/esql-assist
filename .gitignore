@@ -4,7 +4,6 @@
 .svn
 .cache
 LICENSE
-libs/EsqlParser
 
 *.out
 lextab.py
