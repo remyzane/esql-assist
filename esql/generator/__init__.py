@@ -5,13 +5,13 @@ from esql import parser
 from esql.utility import recursive_import
 
 # provide convenience for import in sub module
-from esql.parser import ast
+from esql.parser import rst
 
 GeneratorDict = None
 
 
 class Generator(object):
-    """ Generate ES Mapping from AST
+    """ Generate ES Mapping from RST
     """
 
 
@@ -28,12 +28,10 @@ def has_jobs(items):
 
 
 def execute(sql):
-    _ast = parser.parse(sql)
-    # _ast.children[0]
+    ast = parser.parse(sql)
 
-    print(_ast.cson())
+    print(ast.cson())
 
-    # _ast.encode()
 
 
     # generator_class = GeneratorDict[parser.get_ast_sign(_ast)]

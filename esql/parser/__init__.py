@@ -2,41 +2,41 @@ from ply.lex import lex
 from ply.yacc import yacc
 
 # from esql.parser import lexis, grammar
-from esql.parser.ql_parse import lexis, grammar, transform, TK
+from esql.parser.ast import lexis, grammar, transform, TK
 
 lexer = None
 parser = None
 debug = False
 
-ast_signs = None
-ast_classes = None
+rst_signs = None
+rst_classes = None
 
 
 def init(config):
-    global lexer, parser, debug, ast_signs, ast_classes
+    global lexer, parser, debug, rst_signs, rst_classes
     debug = config.get('debug', False)
     optimize = config.get('optimize', True)
     lexer = lex(module=lexis, optimize=optimize, debug=debug)
     parser = yacc(debug=debug, module=grammar)
 
-    from esql.parser import ast
-    ast_signs = []
-    ast_classes = []
-    for node_class in ast.Node.__subclasses__():
-        ast_signs.append(node_class.__name__.upper())
-        ast_classes.append(node_class)
+    from esql.parser import rst
+    rst_signs = []
+    rst_classes = []
+    for node_class in rst.Node.__subclasses__():
+        rst_signs.append(node_class.__name__.upper())
+        rst_classes.append(node_class)
 
 
-def get_ast_sign(obj):
+def get_rst_sign(obj):
     """ Get sign by node object.
     """
-    return ast_signs[ast_classes.index(obj.__class__)]
+    return rst_signs[rst_classes.index(obj.__class__)]
 
 
-def get_ast_class(sign1, sign2=''):
+def get_rst_class(sign1, sign2=''):
     """ Get node subclass by sign.
     """
-    return ast_classes[ast_signs.index(sign1 + sign2)]
+    return rst_classes[rst_signs.index(sign1 + sign2)]
 
 
 def parse(sql):

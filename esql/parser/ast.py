@@ -1,62 +1,89 @@
 
-from typing import List
+import cson
+from enum import Enum
+from collections import OrderedDict
+
+from ql.parse import lexer as lexis
+from ql.parse import parser as grammar
+from ql.parse.ASTNode import ASTNode
 
 
-class Node(object):
-    """ Abstract base class for AST nodes.
-    """
-    __slots__ = ()
+class Element(object):
+    def __init__(self, _type, _value=None, children: list=None):
+        self.type = _type
+        self.value = _value
+        self.children = children
+
+    def __dict__(self):
+        ret = OrderedDict({'type': self.type.name})
+
+        if self.value and self.type not in [TK.DOT, TK.KEY_VALUE]:
+            ret['value'] = self.value
+
+        if self.children:
+            children = []
+            for item in self.children:
+                children.append(item.__dict__())
+            ret['children'] = children
+
+        return ret
+
+    def cson(self):
+        return cson.dumps(self.__dict__(), indent=4)
 
 
-class TableName(Node):
-    __slots__ = ('index_name', 'doc_type')
-
-    def __init__(self, index_name=None, doc_type=None):
-        self.index_name = index_name
-        self.doc_type = doc_type
-
-
-class FieldName(Node):
-    __slots__ = ('name', 'is_object')
-
-    def __init__(self, name=None, is_object: bool=None):
-        self.name = name
-        self.is_object = is_object
+def transform(obj: ASTNode) -> Element:
+    if obj.children:
+        children = []
+        for item in obj.children:
+            children.append(transform(item))
+        return Element(TK[obj.tokType.name[4:]], obj.tokValue, children)
+    else:
+        return Element(TK[obj.tokType.name[4:]], obj.tokValue, obj.children)
 
 
-FieldNameList = List[FieldName]
+class AutoNumber(Enum):
+    def __new__(cls):
+        value = len(cls.__members__) + 1
+        obj = object.__new__(cls)
+        obj._value_ = value
+        return obj
 
 
-class FieldNames(Node, FieldNameList):
-    """ FieldName List
-    """
+def gen_auto_number_enum(enum_obj):
+    for item in enum_obj:
+        print('    %s = ()' % item.name[4:])
+# from ql.parse.parser import TOKEN
+# gen_auto_number_enum(TOKEN)
 
 
-class FieldValues(Node, list):
-    """ FieldValue List
-    """
-
-
-class ShowVersion(Node):
-    """ SHOW VERSION
-    """
-    __slots__ = ()
-
-
-class Insert(Node):
-    """ INSERT
-    """
-    __slots__ = ('table', 'fields', 'values')
-
-    def __init__(self, table: TableName = None, fields: FieldNames = None, values: FieldValues = None):
-        self.table = table
-        self.fields = fields
-        self.values = values
-
-        if len(fields) != len(values):
-            raise Exception('Number columns or values error!')
-
-# class Query(Node):
-#     """ SELECT
-#     """
-#     __slots__ = ('select', 'from', 'conditions', 'groups', 'limits', 'orders', 'scores', 'highlights')
+class TK(AutoNumber):
+    IDENTIFIER = ()
+    VALUE = ()
+    DOT = ()
+    CORE_TYPE = ()
+    SORT_MODE = ()
+    LIST = ()
+    DICT = ()
+    EXPRESSION = ()
+    COLUMN_DEFINE = ()
+    META_DEFINE = ()
+    TABLE_COLUMNS = ()
+    TABLE_NAME = ()
+    TABLE_METAS = ()
+    TABLE_OPTIONS = ()
+    CREATE_TABLE = ()
+    QUERY = ()
+    FUNCTION = ()
+    KEY_VALUE = ()
+    COMPARE = ()
+    REVERSED = ()
+    COMPLEX = ()
+    SELECT = ()
+    FROM = ()
+    WHERE = ()
+    LIMIT = ()
+    ORDERBY = ()
+    GROUPBY = ()
+    SELEXPR = ()
+    SORT = ()
