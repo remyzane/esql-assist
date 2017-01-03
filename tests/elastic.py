@@ -1,4 +1,6 @@
-from tests import get_test_cases, execute
+import os
+from collections import OrderedDict
+from tests import execute, load_cson, tests_data_path
 
 
 es_method = None
@@ -12,26 +14,33 @@ case_files_all = []
 
 # DO: positive sequence;    RE: recover is inverted sequence execution
 case_list = [
-    ('DO',  'data/elastic/table_create.cson'),          # ----------  Schema
-    ('RE',  'data/elastic/table_drop.cson'),
+    ('DO',  'table_create.cson'),           # ----------  Schema
+    ('RE',  'table_drop.cson'),
 
-    ('DO',  'data/elastic/data_insert.cson'),           # ----------  Data
-    ('DO',  'data/elastic/data_select.cson'),
+    ('DO',  'data_insert.cson'),            # ----------  Data
+    ('DO',  'data_select.cson'),
 ]
 
 for operation, item in case_list:
     if operation == 'DO':
-        case_files_do.append(item)
-        case_files_all.append(item)
+        case_files_do.append('elastic%s%s' % (os.linesep, item))
+        case_files_all.append('elastic%s%s' % (os.linesep, item))
 
 # inverted sequence
 case_list.reverse()
 
 for operation, item in case_list:
     if operation == 'RE':
-        case_files_re.append(item)
-        case_files_all.append(item)
+        case_files_re.append('elastic%s%s' % (os.linesep, item))
+        case_files_all.append('elastic%s%s' % (os.linesep, item))
 
+
+def get_test_cases(case_files):
+    unit_test_cases = OrderedDict()
+    for cson_file in case_files:
+        test_cases = load_cson(cson_file, tests_data_path)
+        unit_test_cases[cson_file] = test_cases or []
+    return unit_test_cases
 
 
 def clear():
