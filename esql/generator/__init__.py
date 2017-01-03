@@ -23,6 +23,10 @@ def init():
         GeneratorDict[processor_class.__name__.upper()] = processor_class
 
 
+def has_jobs(items):
+    pass
+
+
 def execute(sql):
     _ast = parser.parse(sql)
     # _ast.children[0]

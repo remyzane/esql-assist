@@ -1,4 +1,37 @@
-from tests import case_files_re, get_test_cases, execute
+from tests import get_test_cases, execute
+
+
+es_method = None
+es_call_info = []
+
+case_files_do = []
+case_files_re = []
+case_files_all = []
+
+# do_clear_test = True
+
+# DO: positive sequence;    RE: recover is inverted sequence execution
+case_list = [
+    ('DO',  'data/elastic/table_create.cson'),          # ----------  Schema
+    ('RE',  'data/elastic/table_drop.cson'),
+
+    ('DO',  'data/elastic/data_insert.cson'),           # ----------  Data
+    ('DO',  'data/elastic/data_select.cson'),
+]
+
+for operation, item in case_list:
+    if operation == 'DO':
+        case_files_do.append(item)
+        case_files_all.append(item)
+
+# inverted sequence
+case_list.reverse()
+
+for operation, item in case_list:
+    if operation == 'RE':
+        case_files_re.append(item)
+        case_files_all.append(item)
+
 
 
 def clear():
@@ -14,10 +47,15 @@ def clear():
 def test_case():
     clear()
     global es_method
+    use_case_group = get_test_cases(case_files_all)
+    print()
+    for case_file, use_case in use_case_group.items():
+        print('    ' + case_file + ' ...')
+        for _item in use_case:
+            sql = _item['sql']
+            print(execute(sql))
 
 
-    # ESql.red_keys = True
-    # ESql.root_allow_remote = False
     # use_case_group_do = get_test_cases(case_files_do)
     # use_case_group_clear = dict()
     # if 'do_clear_test' in globals() and do_clear_test:

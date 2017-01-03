@@ -1,0 +1,53 @@
+[
+    {
+        sql: 'create table table_name.info (a string, b integer);'
+        ast: {
+            type: 'CREATE_TABLE'
+            children: [
+                {
+                    type: 'TABLE_NAME'
+                    children: [
+                        {
+                            type: 'DOT'
+                            children: [
+                                {
+                                    type: 'VALUE'
+                                    value: 'table_name'
+                                }
+                                {
+                                    type: 'VALUE'
+                                    value: 'info'
+                                }
+                            ]
+                        }
+                    ]
+                }
+                {
+                    type: 'TABLE_COLUMNS'
+                    children: [
+                        {
+                            type: 'COLUMN_DEFINE'
+                            value: 'a'
+                            children: [
+                                {
+                                    type: 'CORE_TYPE'
+                                    value: 'string'
+                                }
+                            ]
+                        }
+                        {
+                            type: 'COLUMN_DEFINE'
+                            value: 'b'
+                            children: [
+                                {
+                                    type: 'CORE_TYPE'
+                                    value: 'integer'
+                                }
+                            ]
+                        }
+                    ]
+                }
+            ]
+        }
+    }
+]
