@@ -1,0 +1,6 @@
+# development requirement package
+
+cson>=0.7                   # unit test config
+pytest>=3.0.5               # unit test tool
+watchdog>=0.8.3             # source file change monitoring
+elasticsearch>=2.4.0        # elasticsearch python driver
