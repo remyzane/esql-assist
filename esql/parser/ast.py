@@ -1,5 +1,4 @@
 
-import cson
 from enum import Enum
 from collections import OrderedDict
 
@@ -15,18 +14,17 @@ class Element(object):
         self.value = _value
         self.children = children
 
-    def tree(self, dict_class=dict):
-        ret = dict_class({'type': self.type.name})
+    def tree(self):
+        ret = OrderedDict({'type': self.type.name})
 
         if self.value and self.type not in [TK.DOT, TK.KEY_VALUE]:
             ret['value'] = self.value
 
         if self.children:
-            children = []
+            children_index = 0
             for item in self.children:
-                children.append(item.tree())
-            ret['children'] = children
-
+                ret['c%d' % children_index] = item.tree()
+                children_index += 1
         return ret
 
 
@@ -51,8 +49,8 @@ class AutoNumber(Enum):
 def gen_auto_number_enum(enum_obj):
     for item in enum_obj:
         print('    %s = ()' % item.name[4:])
-# from ql.parse.parser import TOKEN
-# gen_auto_number_enum(TOKEN)
+from ql.parse.parser import TOKEN
+gen_auto_number_enum(TOKEN)
 
 
 class TK(AutoNumber):
@@ -91,3 +89,6 @@ class TK(AutoNumber):
     BULK_INTO = ()
     INSERT_ROW = ()
     INSERT_ROWS = ()
+    UPSERT_INTO = ()
+    UPDATE = ()
+    SET_COLUMNS_CLAUSE = ()

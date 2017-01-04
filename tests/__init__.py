@@ -1,6 +1,7 @@
 import os
 import cson
 import pathlib
+from collections import OrderedDict
 
 from esql.utility.configure import load_cson
 from esql.processor import explain, execute
@@ -19,21 +20,21 @@ def get_test_cases(dir_name):
 
 def show_object(ast, title=None):
     if title:
-        print('%s%s %s %s' % (os.linesep, '-' * 30, title, os.linesep))
+        print('%s%s %s %s' % (os.linesep, '-' * 50, title, os.linesep))
     _ast = ast.cson() if hasattr(ast, 'cson') else cson.dumps(ast, indent=4)
-    print('    ' + _ast.replace('\n', '\n    '))
+    print('        ' + _ast.replace('\n', '\n        '))
 
 
 def show_difference(sql, source, target, _type, difference):
     print('%s------------ SQL: %s%s' % (os.linesep, '-' * 60, os.linesep))
     print(sql)
-    show_object(source, 'run result [%s]' % _type)
-    show_object(target, ' use case [%s] ' % _type)
+    show_object(source, '[%s]' % _type)
+    show_object(target, '[tc] ')
     if difference:
         source_diff, target_diff = difference
         if source_diff is not target_diff:
-            show_object(source_diff, ' diff in result ')
-            show_object(target_diff, 'diff in use case')
+            show_object(source_diff, 'diff [%s]' % _type)
+            show_object(target_diff, 'diff [tc]')
 
 
 def show_error(sql, message):
@@ -56,7 +57,8 @@ def check_consistency(source, target, ignores=None, can_ellipsis=False):
         return
     elif type(source) in (list, tuple) and type(target) in (list, tuple):
         return check_consistency_list(source, target, ignores)
-    elif type(source) is dict and type(target) is dict:
+    elif type(source) in (dict, OrderedDict) and type(target) in (dict, OrderedDict):
+        source, target = dict(source), dict(target)
         return check_consistency_dict(source, target, ignores, can_ellipsis=can_ellipsis)
     elif source is target:
         return

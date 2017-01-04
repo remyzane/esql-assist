@@ -35,8 +35,8 @@ def get_processor(sql):
 
 
 def explain(sql):
-    print(get_processor(sql).explain())
+    return get_processor(sql).explain()
 
 
 def execute(sql):
-    print(get_processor(sql).execute())
+    return get_processor(sql).execute()

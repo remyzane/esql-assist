@@ -25,4 +25,20 @@ class TableCreate(Processor):
         #     params['parent'] = _parent
 
         # return params
-        return ''
+        return {
+    "body": {
+        "info": {
+            "properties": {
+                "a": {
+                    "index": "not_analyzed",
+                    "type": "string"
+                },
+                "b": {
+                    "type": "integer"
+                }
+            }
+        }
+    },
+    "index": "table_name",
+    "doc_type": "info"
+}
