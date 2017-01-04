@@ -3,7 +3,7 @@ import cson
 import pathlib
 
 from esql.utility.configure import load_cson
-from esql.generator import execute
+from esql.processor import explain, execute
 
 tests_data_path = os.path.realpath(os.path.join(__file__, '..', 'data'))
 

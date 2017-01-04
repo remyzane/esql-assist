@@ -16,6 +16,9 @@ class Processor(object):
     def __init__(self, sql):
         self.sql = sql
 
+    def execute(self):
+        return self.explain()
+
 
 def init():
     global ProcessorDict
@@ -25,13 +28,15 @@ def init():
         ProcessorDict[processor_class.mapping] = processor_class
 
 
-def execute(sql):
+def get_processor(sql):
     _ast = parser.parse(sql)
     processor_class = ProcessorDict[_ast.type]
-    processor = processor_class(sql, _ast)
+    return processor_class(sql, _ast)
 
-    print(processor.execute())
 
-    # generator_class = ProcessorDict[parser.get_ast_sign(_ast)]
-    # _generator = generator_class(sql, _ast)
-    # return _generator.execute()
+def explain(sql):
+    print(get_processor(sql).explain())
+
+
+def execute(sql):
+    print(get_processor(sql).execute())
