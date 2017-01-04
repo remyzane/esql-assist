@@ -3,9 +3,10 @@ import cson
 from enum import Enum
 from collections import OrderedDict
 
+from ql.parse.ASTNode import ASTNode
+# provide convenience for import in sub module
 from ql.parse import lexer as lexis
 from ql.parse import parser as grammar
-from ql.parse.ASTNode import ASTNode
 
 
 class Element(object):
@@ -14,8 +15,8 @@ class Element(object):
         self.value = _value
         self.children = children
 
-    def __dict__(self):
-        ret = OrderedDict({'type': self.type.name})
+    def tree(self, dict_class=dict):
+        ret = dict_class({'type': self.type.name})
 
         if self.value and self.type not in [TK.DOT, TK.KEY_VALUE]:
             ret['value'] = self.value
@@ -23,17 +24,10 @@ class Element(object):
         if self.children:
             children = []
             for item in self.children:
-                children.append(item.__dict__())
+                children.append(item.tree())
             ret['children'] = children
 
         return ret
-
-    def cson(self):
-        return cson.dumps(self.__dict__(), indent=4)
-
-
-def ele(obj) -> Element:
-    return obj
 
 
 def transform(obj: ASTNode) -> Element:

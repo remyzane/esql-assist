@@ -1,7 +1,6 @@
 from ply.lex import lex
 from ply.yacc import yacc
 
-# from esql.parser import lexis, grammar
 from esql.parser.ast import lexis, grammar, transform, TK
 
 lexer = None
@@ -41,4 +40,4 @@ def get_rst_class(sign1, sign2=''):
 
 def parse(sql):
     _ast = parser.parse(input=sql, lexer=lexer.clone(), debug=debug)
-    return transform(_ast)
+    return transform(_ast)  # rst

@@ -1,4 +1,3 @@
-import cson
 from esql import parser
 from tests import get_test_cases, tests_data_path, check_consistency, show_difference
 
@@ -10,8 +9,8 @@ def test_cases():
         print('    ' + case_file[len(tests_data_path) + 1:] + ' ...')
         for _item in use_case:
             sql = _item['sql']
-            ast = parser.parse(sql)
-            source = cson.loads(ast.cson())
+            rst = parser.parse(sql)
+            source = rst.tree()
             target = _item['ast']
 
             difference = check_consistency(source, target)

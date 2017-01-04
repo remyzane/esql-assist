@@ -24,45 +24,44 @@ class Environment(object):
         self.config = load_toml('esql.toml', os.path.join(workspace, 'conf'))
 
         self.es_hosts = []
-        self.es_version = None
-        self.es_version_major = None
-        self.get_elastic_info()
+        self.es_driver_version = None
+        self.conf_elastic()
+
+        self.set_libs_path()
         from elasticsearch import Elasticsearch
         self.es = Elasticsearch(self.es_hosts)
-        self.set_elastic_info()
-        self.set_libs_path()
 
-    def get_elastic_info(self):
-        config = self.config['server']
-        driver_version = '2.4.0' if config['driver_version'] == 2 else '5.0.1'
-        elastic_package = os.path.join(self.workspace, 'libs', 'elasticsearch-py-' + driver_version)
-        if not os.path.exists(elastic_package):
-            log.error('elastic package [%s] not exists', elastic_package)
-        sys.path.insert(0, elastic_package)
+        self.es_version = None
+        self.es_version_major = None
+        self.get_elastic_version()
 
-        for host in config['hosts']:
+    def conf_elastic(self):
+        self.es_driver_version = self.config['server']['driver_version']
+        for host in self.config['server']['hosts']:
             address, port = host.split(':')
             if address == 'localhost':  # sometimes, 127.0.0.1 localhost not in /etc/hosts
                 address = '127.0.0.1'
             self.es_hosts.append({'host': address, 'port': int(port)})
 
-    def set_elastic_info(self):
-        from elasticsearch import VERSION
-        log.info('load python lib [elasticsearch] with version: %s', VERSION)
-        driver_version = self.config['server']['driver_version']
-        info = self.es.info()
-        self.es_version = info['version']['number']
-        self.es_version_major = int(self.es_version.split('.')[0])
-        if self.es_version_major != driver_version:
-            error = 'elasticsearch\'s version is [%s], but configured python diver\'s version is [%d].'
-            log.error(error, self.es_version_major, driver_version)
-            exit(0)
-
     def set_libs_path(self):
         libs = pathlib.Path(os.path.join(self.workspace, 'libs'))
         for lib in libs.iterdir():
-            if lib.is_dir() and not lib.name.startswith('elasticsearch-py-'):
+            if lib.is_dir():
+                if lib.name.startswith('elasticsearch-py-'):
+                    if self.es_driver_version != int(lib.name[len('elasticsearch-py-')]):
+                        continue
                 sys.path.insert(0, str(lib))
+
+    def get_elastic_version(self):
+        from elasticsearch import VERSION
+        log.info('load python lib [elasticsearch] with version: %s', VERSION)
+        info = self.es.info()
+        self.es_version = info['version']['number']
+        self.es_version_major = int(self.es_version.split('.')[0])
+        if self.es_version_major != self.es_driver_version:
+            error = 'elasticsearch\'s version is [%s], but configured python diver\'s version is [%d].'
+            log.error(error, self.es_version_major, self.es_driver_version)
+            exit(0)
 
 
 def load_toml(file_path, prefix=os.curdir):
