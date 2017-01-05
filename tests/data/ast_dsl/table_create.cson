@@ -36,3 +36,84 @@
                         type: 'string'
                     b:
                         type: 'integer'
+
+'''
+create table my_index.my_table (
+    id0 string,
+    sub0 object as (
+        id1 string, name1 string,
+        sub1 object as (
+            id2 string,
+            sub2 object as (sub_name string)
+        )
+    )
+);''':
+    ast:
+        type: 'CREATE_TABLE'
+        c0:
+            type: 'TABLE_NAME'
+            c0:
+                type: 'DOT'
+                c0:
+                    type: 'VALUE'
+                    value: 'my_index'
+                c1:
+                    type: 'VALUE'
+                    value: 'my_table'
+        c1:
+            type: 'TABLE_COLUMNS'
+            c0:
+                type: 'COLUMN_DEFINE'
+                value: 'id0'
+                c0:
+                    type: 'CORE_TYPE'
+                    value: 'string'
+            c1:
+                type: 'COLUMN_DEFINE'
+                value: 'sub0'
+                c0:
+                    type: 'CORE_TYPE'
+                    value: 'object'
+                c1:
+                    type: 'TABLE_COLUMNS'
+                    c0:
+                        type: 'COLUMN_DEFINE'
+                        value: 'id1'
+                        c0:
+                            type: 'CORE_TYPE'
+                            value: 'string'
+                    c1:
+                        type: 'COLUMN_DEFINE'
+                        value: 'name1'
+                        c0:
+                            type: 'CORE_TYPE'
+                            value: 'string'
+                    c2:
+                        type: 'COLUMN_DEFINE'
+                        value: 'sub1'
+                        c0:
+                            type: 'CORE_TYPE'
+                            value: 'object'
+                        c1:
+                            type: 'TABLE_COLUMNS'
+                            c0:
+                                type: 'COLUMN_DEFINE'
+                                value: 'id2'
+                                c0:
+                                    type: 'CORE_TYPE'
+                                    value: 'string'
+                            c1:
+                                type: 'COLUMN_DEFINE'
+                                value: 'sub2'
+                                c0:
+                                    type: 'CORE_TYPE'
+                                    value: 'object'
+                                c1:
+                                    type: 'TABLE_COLUMNS'
+                                    c0:
+                                        type: 'COLUMN_DEFINE'
+                                        value: 'sub_name'
+                                        c0:
+                                            type: 'CORE_TYPE'
+                                            value: 'string'
+    dsl: ''

@@ -23,4 +23,4 @@ def es_sql():
     sql = request_data.get('sql')
     return execute(sql)
 
-# execute('create table table_name.info (a string, b integer);')
+# print(execute('create table table_name.info (a string, b integer);'))

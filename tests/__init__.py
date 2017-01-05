@@ -4,6 +4,7 @@ import pathlib
 from collections import OrderedDict
 
 from esql.utility.configure import load_cson
+# provide convenience for coding
 from esql.processor import explain, execute
 
 tests_data_path = os.path.realpath(os.path.join(__file__, '..', 'data'))

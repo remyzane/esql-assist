@@ -9,6 +9,8 @@ from esql.utility import AutoNumber
 
 
 class Element(object):
+    """ Ast element
+    """
 
     def __init__(self, _type, _value=None, children: list=None):
         self.type = _type
@@ -29,6 +31,8 @@ class Element(object):
                 self.c3 = _get_children(children, 3)
 
     def tree(self):
+        """ Generate a serializable tree
+        """
         ret = OrderedDict({'type': self.type.name})
 
         if self.value and self.type not in [TK.DOT, TK.KEY_VALUE]:
@@ -43,6 +47,8 @@ class Element(object):
 
 
 def transform(obj: ASTNode) -> Element:
+    """ Generate a ast element tree
+    """
     if obj.children:
         children = []
         for item in obj.children:
