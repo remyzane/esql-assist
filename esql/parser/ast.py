@@ -1,18 +1,32 @@
 
-from enum import Enum
 from collections import OrderedDict
 
 from ql.parse.ASTNode import ASTNode
 # provide convenience for import in sub module
 from ql.parse import lexer as lexis
 from ql.parse import parser as grammar
+from esql.utility import AutoNumber
 
 
 class Element(object):
+
     def __init__(self, _type, _value=None, children: list=None):
         self.type = _type
         self.value = _value
         self.children = children
+
+        # provide convenience for coding
+        def _get_children(_children, index) -> Element:
+            return _children[index]
+        if children:
+            self.c0 = _get_children(children, 0)
+            children_len = len(children)
+            if children_len > 1:
+                self.c1 = _get_children(children, 1)
+            if children_len > 2:
+                self.c2 = _get_children(children, 2)
+            if children_len > 3:
+                self.c3 = _get_children(children, 3)
 
     def tree(self):
         ret = OrderedDict({'type': self.type.name})
@@ -38,19 +52,11 @@ def transform(obj: ASTNode) -> Element:
         return Element(TK[obj.tokType.name[4:]], obj.tokValue, obj.children)
 
 
-class AutoNumber(Enum):
-    def __new__(cls):
-        value = len(cls.__members__) + 1
-        obj = object.__new__(cls)
-        obj._value_ = value
-        return obj
-
-
-def gen_auto_number_enum(enum_obj):
-    for item in enum_obj:
-        print('    %s = ()' % item.name[4:])
-from ql.parse.parser import TOKEN
-gen_auto_number_enum(TOKEN)
+# # generate TK class
+# from ql.parse.parser import TOKEN
+# print('class TK(AutoNumber):')
+# for item in TOKEN:
+#     print('    %s = ()' % item.name[4:])
 
 
 class TK(AutoNumber):

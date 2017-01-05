@@ -1,5 +1,5 @@
-import json
-from esql.processor import ast, rst, TK, Processor
+
+from esql.processor import ast, rst, Processor
 
 
 class TableCreate(Processor):
@@ -11,34 +11,12 @@ class TableCreate(Processor):
         self.rst = rst.TableCreate(_ast)
 
     def explain(self):
-        self.rst.table
-        self.rst.fields[0]
-        # body, _id, _parent = self.build_insert_body()
-        # params = {
-        #     'index': self.rst.table.index_name,
-        #     'doc_type': self.rst.table.doc_type,
-        #     'body': body
-        # }
-        # if _id:
-        #     params['id'] = _id
-        # if _parent:
-        #     params['parent'] = _parent
+        dsl = {'index': self.rst.table.index_name,
+               'doc_type': self.rst.table.doc_type,
+               'body': {self.rst.table.doc_type: {'properties': {}}}}
+        properties = dsl['body'][self.rst.table.doc_type]['properties']
 
-        # return params
-        return {
-    "body": {
-        "info": {
-            "properties": {
-                "a": {
-                    "index": "not_analyzed",
-                    "type": "string"
-                },
-                "b": {
-                    "type": "integer"
-                }
-            }
-        }
-    },
-    "index": "table_name",
-    "doc_type": "info"
-}
+        for field in self.rst.fields:
+            properties[field.name] = {'type': field.type}
+
+        return dsl

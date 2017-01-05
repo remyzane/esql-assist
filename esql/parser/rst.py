@@ -16,8 +16,8 @@ class TableName(Node):
     def __init__(self, tree):
         for item in tree:
             if item.type == TK.DOT:
-                self.index_name = item.children[0].value
-                self.doc_type = item.children[1].value
+                self.index_name = item.c0.value
+                self.doc_type = item.c1.value
 
 
 class FieldDefine(Node):
@@ -26,7 +26,7 @@ class FieldDefine(Node):
     def __init__(self, tree: ast.Element = None):
         if tree.type == TK.COLUMN_DEFINE:
             self.name = tree.value
-            self.type = tree.children[0].value
+            self.type = tree.c0.value
 
 
 class TableCreate(Node):

@@ -16,3 +16,4 @@ def test_cases():
             difference = check_consistency(source, target)
             if difference:
                 show_difference(sql, source, target, 'dsl', difference)
+                assert False
