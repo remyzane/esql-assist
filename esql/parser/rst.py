@@ -1,6 +1,5 @@
 from typing import List
-from esql.parser import ast
-from esql.parser.ast import TK
+from esql.parser.ast import TK, Element, get_child
 from esql.parser.utility import *
 
 
@@ -15,6 +14,22 @@ class NodeList(list):
     """
 
 
+class Attribute(Node):
+    __slots__ = ('key', 'value')
+
+    def __init__(self, tree: Element = None):
+        if tree.type == TK.KEY_VALUE:
+            self.key = tree.c0.value
+            self.value = tree.c1.value
+
+
+class Attributes(List[Attribute]):
+
+    def __init__(self, attributes):
+        for attribute in attributes:
+            self.append(Attribute(attribute))
+
+
 class TableName(Node):
     __slots__ = ('index_name', 'doc_type')
 
@@ -26,25 +41,33 @@ class TableName(Node):
 
 
 class FieldDefine(Node):
-    __slots__ = ('name', 'type', 'fields')
+    __slots__ = ('name', 'type', 'options', 'fields')
 
-    def __init__(self, tree: ast.Element = None):
+    def __init__(self, tree: Element = None):
         if tree.type == TK.COLUMN_DEFINE:
             self.name = tree.value
             self.type = tree.c0.value
-            if self.type == 'object' and tree.c1.children and tree.c1.type == TK.TABLE_COLUMNS:
-                self.fields = FieldsDefine(tree.c1.children)
+            if self.type == 'object':
+                cols = get_child(tree, TK.TABLE_COLUMNS)
+                if cols and cols.children:
+                    self.fields = FieldsDefine(cols.children)
+            opts = get_child(tree, TK.DICT)
+            if opts:
+                self.options = Attributes(opts.children)
 
     def dsl(self):
         field = {'type': self.type}
+        if hasattr(self, 'options'):
+            for option in self.options:
+                field[option.key] = option.value
         if hasattr(self, 'fields'):
             field['properties'] = self.fields.dsl()
         return field
 
 
-class FieldsDefine(NodeList):
+class FieldsDefine(List[FieldDefine]):
 
-    def __init__(self, fields: List[ast.Element] = None):
+    def __init__(self, fields):
         for field in fields:
             self.append(FieldDefine(field))
 
