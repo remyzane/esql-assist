@@ -1,4 +1,4 @@
-
+from typing import List
 from collections import OrderedDict
 
 from ql.parse.ASTNode import ASTNode
@@ -18,17 +18,17 @@ class Element(object):
         self.children = children
 
         # provide convenience for coding
-        def _get_children(_children, index) -> Element:
+        def _get_child(_children, index) -> Element:
             return _children[index]
         if children:
-            self.c0 = _get_children(children, 0)
+            self.c0 = _get_child(children, 0)
             children_len = len(children)
             if children_len > 1:
-                self.c1 = _get_children(children, 1)
+                self.c1 = _get_child(children, 1)
             if children_len > 2:
-                self.c2 = _get_children(children, 2)
+                self.c2 = _get_child(children, 2)
             if children_len > 3:
-                self.c3 = _get_children(children, 3)
+                self.c3 = _get_child(children, 3)
 
     def tree(self):
         """ Generate a serializable tree
@@ -51,8 +51,8 @@ def transform(obj: ASTNode) -> Element:
     """
     if obj.children:
         children = []
-        for item in obj.children:
-            children.append(transform(item))
+        for child in obj.children:
+            children.append(transform(child))
         return Element(TK[obj.tokType.name[4:]], obj.tokValue, children)
     else:
         return Element(TK[obj.tokType.name[4:]], obj.tokValue, obj.children)

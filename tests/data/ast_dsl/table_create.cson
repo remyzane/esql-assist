@@ -1,4 +1,4 @@
-'create table table_name.info (a string, b integer);':
+'create table my_index.my_table (id string, name integer);':
     ast:
         type: 'CREATE_TABLE'
         c0:
@@ -7,44 +7,44 @@
                 type: 'DOT'
                 c0:
                     type: 'VALUE'
-                    value: 'table_name'
+                    value: 'my_index'
                 c1:
                     type: 'VALUE'
-                    value: 'info'
+                    value: 'my_table'
         c1:
             type: 'TABLE_COLUMNS'
             c0:
                 type: 'COLUMN_DEFINE'
-                value: 'a'
+                value: 'id'
                 c0:
                     type: 'CORE_TYPE'
                     value: 'string'
             c1:
                 type: 'COLUMN_DEFINE'
-                value: 'b'
+                value: 'name'
                 c0:
                     type: 'CORE_TYPE'
                     value: 'integer'
-    
+
     dsl:
-        index: 'table_name'
-        doc_type: 'info'
+        doc_type: 'my_table'
         body:
-            info:
+            my_table:
                 properties:
-                    a:
-                        type: 'string'
-                    b:
+                    name:
                         type: 'integer'
+                    id:
+                        type: 'string'
+        index: 'my_index'
 
 '''
 create table my_index.my_table (
-    id0 string,
-    sub0 object as (
-        id1 string, name1 string,
-        sub1 object as (
-            id2 string,
-            sub2 object as (sub_name string)
+    id string, name string,
+    sub object as (
+        sub object as (),
+        sub2 object as (
+            id string, name string,
+            sub object as ()
         )
     )
 );''':
@@ -64,13 +64,19 @@ create table my_index.my_table (
             type: 'TABLE_COLUMNS'
             c0:
                 type: 'COLUMN_DEFINE'
-                value: 'id0'
+                value: 'id'
                 c0:
                     type: 'CORE_TYPE'
                     value: 'string'
             c1:
                 type: 'COLUMN_DEFINE'
-                value: 'sub0'
+                value: 'name'
+                c0:
+                    type: 'CORE_TYPE'
+                    value: 'string'
+            c2:
+                type: 'COLUMN_DEFINE'
+                value: 'sub'
                 c0:
                     type: 'CORE_TYPE'
                     value: 'object'
@@ -78,19 +84,15 @@ create table my_index.my_table (
                     type: 'TABLE_COLUMNS'
                     c0:
                         type: 'COLUMN_DEFINE'
-                        value: 'id1'
+                        value: 'sub'
                         c0:
                             type: 'CORE_TYPE'
-                            value: 'string'
+                            value: 'object'
+                        c1:
+                            type: 'TABLE_COLUMNS'
                     c1:
                         type: 'COLUMN_DEFINE'
-                        value: 'name1'
-                        c0:
-                            type: 'CORE_TYPE'
-                            value: 'string'
-                    c2:
-                        type: 'COLUMN_DEFINE'
-                        value: 'sub1'
+                        value: 'sub2'
                         c0:
                             type: 'CORE_TYPE'
                             value: 'object'
@@ -98,22 +100,69 @@ create table my_index.my_table (
                             type: 'TABLE_COLUMNS'
                             c0:
                                 type: 'COLUMN_DEFINE'
-                                value: 'id2'
+                                value: 'id'
                                 c0:
                                     type: 'CORE_TYPE'
                                     value: 'string'
                             c1:
                                 type: 'COLUMN_DEFINE'
-                                value: 'sub2'
+                                value: 'name'
+                                c0:
+                                    type: 'CORE_TYPE'
+                                    value: 'string'
+                            c2:
+                                type: 'COLUMN_DEFINE'
+                                value: 'sub'
                                 c0:
                                     type: 'CORE_TYPE'
                                     value: 'object'
                                 c1:
                                     type: 'TABLE_COLUMNS'
-                                    c0:
-                                        type: 'COLUMN_DEFINE'
-                                        value: 'sub_name'
-                                        c0:
-                                            type: 'CORE_TYPE'
-                                            value: 'string'
-    dsl: ''
+    dsl:
+        index: 'my_index'
+        doc_type: 'my_table'
+        body:
+            my_table:
+                properties:
+                    id:
+                        type: 'string'
+                    name:
+                        type: 'string'
+                    sub:
+                        type: 'object'
+                        properties:
+                            sub:
+                                type: 'object'
+                            sub2:
+                                type: 'object'
+                                properties:
+                                    sub:
+                                        type: 'object'
+                                    id:
+                                        type: 'string'
+                                    name:
+                                        type: 'string'
+
+# '':
+#     ast: ''
+#     dsl: ''
+
+# '':
+#     ast: ''
+#     dsl: ''
+
+# '':
+#     ast: ''
+#     dsl: ''
+
+# '':
+#     ast: ''
+#     dsl: ''
+
+# '':
+#     ast: ''
+#     dsl: ''
+
+# '':
+#     ast: ''
+#     dsl: ''

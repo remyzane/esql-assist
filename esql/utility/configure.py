@@ -6,8 +6,6 @@ import cson
 import pathlib
 import logging
 
-from esql.utility import PY3
-
 log = logging.getLogger(__name__)
 
 
@@ -69,7 +67,7 @@ def load_toml(file_path, prefix=os.curdir):
         file_path = os.path.join(prefix, file_path)
     if not os.path.exists(file_path):
         raise Exception('toml file [%s] not exists.', file_path)
-    f = open(file_path, 'r', encoding='utf-8') if PY3 else open(file_path, 'r')
+    f = open(file_path, 'r', encoding='utf-8')
     data = toml.load(f)
     f.close()
     return data
@@ -80,8 +78,7 @@ def load_cson(file_path, prefix=os.curdir):
         file_path = os.path.join(prefix, file_path)
     if not os.path.exists(file_path):
         raise Exception('cson file [%s] not exists.', file_path)
-    f = open(file_path, 'r', encoding='utf-8') if PY3 else open(file_path, 'r')
+    f = open(file_path, 'r', encoding='utf-8')
     data = cson.load(f)
     f.close()
     return data
-

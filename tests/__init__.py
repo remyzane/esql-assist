@@ -14,8 +14,9 @@ def get_test_cases(dir_name):
     unit_test_cases = dict()
     path_obj = pathlib.Path(os.path.join(tests_data_path, dir_name))
     for cson_file in path_obj.iterdir():
-        test_cases = load_cson(str(cson_file))
-        unit_test_cases[str(cson_file)] = test_cases or []
+        if cson_file.name.endswith('.cson'):
+            test_cases = load_cson(str(cson_file))
+            unit_test_cases[str(cson_file)] = test_cases or []
     return unit_test_cases
 
 

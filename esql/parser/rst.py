@@ -10,6 +10,11 @@ class Node(object):
     __slots__ = ()
 
 
+class NodeList(list):
+    """ Node List
+    """
+
+
 class TableName(Node):
     __slots__ = ('index_name', 'doc_type')
 
@@ -21,12 +26,33 @@ class TableName(Node):
 
 
 class FieldDefine(Node):
-    __slots__ = ('name', 'type')
+    __slots__ = ('name', 'type', 'fields')
 
     def __init__(self, tree: ast.Element = None):
         if tree.type == TK.COLUMN_DEFINE:
             self.name = tree.value
             self.type = tree.c0.value
+            if self.type == 'object' and tree.c1.children and tree.c1.type == TK.TABLE_COLUMNS:
+                self.fields = FieldsDefine(tree.c1.children)
+
+    def dsl(self):
+        field = {'type': self.type}
+        if hasattr(self, 'fields'):
+            field['properties'] = self.fields.dsl()
+        return field
+
+
+class FieldsDefine(NodeList):
+
+    def __init__(self, fields: List[ast.Element] = None):
+        for field in fields:
+            self.append(FieldDefine(field))
+
+    def dsl(self):
+        properties = {}
+        for field in self:
+            properties[field.name] = field.dsl()
+        return properties
 
 
 class TableCreate(Node):
@@ -38,9 +64,8 @@ class TableCreate(Node):
         self.table = table
         self.fields = fields or []
 
-        for item in tree.children:
-            if item.type == TK.TABLE_NAME:
-                self.table = TableName(item.children)
-            elif item.type == TK.TABLE_COLUMNS:
-                for field_tree in item.children:
-                    self.fields.append(FieldDefine(field_tree))
+        for child in tree.children:
+            if child.type == TK.TABLE_NAME:
+                self.table = TableName(child.children)
+            elif child.type == TK.TABLE_COLUMNS:
+                self.fields = FieldsDefine(child.children)

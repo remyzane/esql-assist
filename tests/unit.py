@@ -1,4 +1,4 @@
-from tests.__utility import check_consistency
+from tests import check_consistency
 
 
 def test_check_consistency():

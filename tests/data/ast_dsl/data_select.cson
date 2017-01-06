@@ -1,55 +1,80 @@
-'select * from my_index.my_table;':
-    ast:
-        type: 'QUERY'
-        c0:
-            type: 'SELECT'
-            c0:
-                type: 'SELEXPR'
-                c0:
-                    type: 'VALUE'
-                    value: '*'
-        c1:
-            type: 'FROM'
-            c0:
-                type: 'TABLE_NAME'
-                c0:
-                    type: 'DOT'
-                    c0:
-                        type: 'VALUE'
-                        value: 'my_index'
-                    c1:
-                        type: 'VALUE'
-                        value: 'my_table'
-    dsl: ''
+{}
+# 'select * from my_index.my_table;':
+#     ast:
+#         type: 'QUERY'
+#         c0:
+#             type: 'SELECT'
+#             c0:
+#                 type: 'SELEXPR'
+#                 c0:
+#                     type: 'VALUE'
+#                     value: '*'
+#         c1:
+#             type: 'FROM'
+#             c0:
+#                 type: 'TABLE_NAME'
+#                 c0:
+#                     type: 'DOT'
+#                     c0:
+#                         type: 'VALUE'
+#                         value: 'my_index'
+#                     c1:
+#                         type: 'VALUE'
+#                         value: 'my_table'
+#     dsl: ''
 
-'select count(*) from my_index.my_table group by age;':
-    ast: 
-        type: 'QUERY'
-        c0:
-            type: 'SELECT'
-            c0:
-                type: 'SELEXPR'
-                c0:
-                    type: 'FUNCTION'
-                    value: 'count'
-                    c0:
-                        type: 'VALUE'
-                        value: '*'
-        c1:
-            type: 'FROM'
-            c0:
-                type: 'TABLE_NAME'
-                c0:
-                    type: 'DOT'
-                    c0:
-                        type: 'VALUE'
-                        value: 'my_index'
-                    c1:
-                        type: 'VALUE'
-                        value: 'my_table'
-        c2:
-            type: 'GROUPBY'
-            c0:
-                type: 'VALUE'
-                value: 'age'
-    dsl: ''
+# 'select count(*) from my_index.my_table group by age;':
+#     ast: 
+#         type: 'QUERY'
+#         c0:
+#             type: 'SELECT'
+#             c0:
+#                 type: 'SELEXPR'
+#                 c0:
+#                     type: 'FUNCTION'
+#                     value: 'count'
+#                     c0:
+#                         type: 'VALUE'
+#                         value: '*'
+#         c1:
+#             type: 'FROM'
+#             c0:
+#                 type: 'TABLE_NAME'
+#                 c0:
+#                     type: 'DOT'
+#                     c0:
+#                         type: 'VALUE'
+#                         value: 'my_index'
+#                     c1:
+#                         type: 'VALUE'
+#                         value: 'my_table'
+#         c2:
+#             type: 'GROUPBY'
+#             c0:
+#                 type: 'VALUE'
+#                 value: 'age'
+#     dsl: ''
+
+# '':
+#     ast: ''
+#     dsl: ''
+
+# '':
+#     ast: ''
+#     dsl: ''
+
+# '':
+#     ast: ''
+#     dsl: ''
+
+# '':
+#     ast: ''
+#     dsl: ''
+
+# '':
+#     ast: ''
+#     dsl: ''
+
+# '':
+#     ast: ''
+#     dsl: ''

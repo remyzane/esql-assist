@@ -13,10 +13,6 @@ class TableCreate(Processor):
     def explain(self):
         dsl = {'index': self.rst.table.index_name,
                'doc_type': self.rst.table.doc_type,
-               'body': {self.rst.table.doc_type: {'properties': {}}}}
-        properties = dsl['body'][self.rst.table.doc_type]['properties']
-
-        for field in self.rst.fields:
-            properties[field.name] = {'type': field.type}
-
+               'body': {self.rst.table.doc_type: {}}}
+        dsl['body'][self.rst.table.doc_type]['properties'] = self.rst.fields.dsl()
         return dsl

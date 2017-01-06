@@ -8,8 +8,6 @@ from importlib import import_module
 from collections import Mapping, OrderedDict
 
 POSIX = os.name != 'nt'
-PY3 = sys.version_info[0] == 3
-PY_TYPING = PY3 and sys.version_info[1] > 4
 
 
 class AutoNumber(Enum):
