@@ -1,6 +1,6 @@
 import os
 from collections import OrderedDict
-from tests import execute, load_cson, tests_data_path
+from tests import Processor, load_cson, tests_data_path
 
 
 es_method = None
@@ -50,7 +50,7 @@ def clear():
         print('    clearing ' + case_file + ' ...')
         for _item in use_case:
             sql = _item['sql']
-            print(execute(sql))
+            print(Processor.execute(sql))
 
 
 def test_case():
@@ -62,7 +62,7 @@ def test_case():
         print('    ' + case_file + ' ...')
         for _item in use_case:
             sql = _item['sql']
-            print(execute(sql))
+            print(Processor.execute(sql))
 
 
     # use_case_group_do = get_test_cases(case_files_do)

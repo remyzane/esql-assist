@@ -1,4 +1,4 @@
-from tests import explain, get_test_cases, tests_data_path, check_consistency, show_difference
+from tests import Processor, get_test_cases, tests_data_path, check_consistency, show_difference
 
 
 def test_cases():
@@ -11,7 +11,7 @@ def test_cases():
         for sql, _tc in use_case.items():
             if 'dsl' not in _tc:
                 continue
-            source = explain(sql)
+            source = Processor.execute(sql)
             target = _tc['dsl']
             difference = check_consistency(source, target)
             if difference:

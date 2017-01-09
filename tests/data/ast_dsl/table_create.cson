@@ -1,30 +1,32 @@
-'create table my_index.my_table (id string, name integer);':
+'explain create table my_index.my_table (id string, name integer);':
     ast:
-        type: 'CREATE_TABLE'
+        type: 'EXPLAIN'
         c0:
-            type: 'TABLE_NAME'
+            type: 'CREATE_TABLE'
             c0:
-                type: 'DOT'
+                type: 'TABLE_NAME'
                 c0:
-                    type: 'VALUE'
-                    value: 'my_index'
-                c1:
-                    type: 'VALUE'
-                    value: 'my_table'
-        c1:
-            type: 'TABLE_COLUMNS'
-            c0:
-                type: 'COLUMN_DEFINE'
-                value: 'id'
-                c0:
-                    type: 'CORE_TYPE'
-                    value: 'string'
+                    type: 'DOT'
+                    c0:
+                        type: 'VALUE'
+                        value: 'my_index'
+                    c1:
+                        type: 'VALUE'
+                        value: 'my_table'
             c1:
-                type: 'COLUMN_DEFINE'
-                value: 'name'
+                type: 'TABLE_COLUMNS'
                 c0:
-                    type: 'CORE_TYPE'
-                    value: 'integer'
+                    type: 'COLUMN_DEFINE'
+                    value: 'id'
+                    c0:
+                        type: 'CORE_TYPE'
+                        value: 'string'
+                c1:
+                    type: 'COLUMN_DEFINE'
+                    value: 'name'
+                    c0:
+                        type: 'CORE_TYPE'
+                        value: 'integer'
 
     dsl:
         doc_type: 'my_table'
