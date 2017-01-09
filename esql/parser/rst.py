@@ -1,5 +1,5 @@
 from typing import List
-from esql.parser.ast import TK, Element, get_child
+from esql.parser.ast import TK, Element
 from esql.parser.utility import *
 
 
@@ -18,9 +18,9 @@ class Attribute(Node):
     __slots__ = ('key', 'value')
 
     def __init__(self, tree: Element = None):
-        if tree.type == TK.KEY_VALUE:
-            self.key = tree.c0.value
-            self.value = tree.c1.value
+        if tree.type == TK.TOK_KEY_VALUE:
+            self.key = tree.sub(0).value
+            self.value = tree.sub(1).value
 
 
 class Attributes(List[Attribute]):
@@ -35,25 +35,25 @@ class TableName(Node):
 
     def __init__(self, tree):
         for item in tree:
-            if item.type == TK.DOT:
-                self.index_name = item.c0.value
-                self.doc_type = item.c1.value
+            if item.type == TK.TOK_DOT:
+                self.index_name = item.sub(0).value
+                self.doc_type = item.sub(1).value
 
 
 class FieldDefine(Node):
     __slots__ = ('name', 'type', 'options', 'fields')
 
     def __init__(self, tree: Element = None):
-        if tree.type == TK.COLUMN_DEFINE:
+        if tree.type == TK.TOK_COLUMN_DEFINE:
             self.name = tree.value
-            self.type = tree.c0.value
+            self.type = tree.sub(0).value
             if self.type == 'object':
-                cols = get_child(tree, TK.TABLE_COLUMNS)
+                cols = tree.sub_token(TK.TOK_TABLE_COLUMNS)
                 if cols and cols.children:
                     self.fields = FieldsDefine(cols.children)
-            opts = get_child(tree, TK.DICT)
+            opts = tree.sub_token(TK.TOK_COLUMN_OPTIONS)
             if opts:
-                self.options = Attributes(opts.children)
+                self.options = Attributes(opts.sub(0).children)
 
     def dsl(self):
         field = {'type': self.type}
@@ -88,7 +88,7 @@ class TableCreate(Node):
         self.fields = fields or []
 
         for child in tree.children:
-            if child.type == TK.TABLE_NAME:
+            if child.type == TK.TOK_TABLE_NAME:
                 self.table = TableName(child.children)
-            elif child.type == TK.TABLE_COLUMNS:
+            elif child.type == TK.TOK_TABLE_COLUMNS:
                 self.fields = FieldsDefine(child.children)

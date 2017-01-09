@@ -13,7 +13,7 @@ def test_cases():
             if 'ast' not in _tc:
                 continue
             rst = parser.parse(sql)
-            source = rst.tree()
+            source = rst.dict()
             target = _tc['ast']
             difference = check_consistency(source, target)
             if difference:

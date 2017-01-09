@@ -176,15 +176,17 @@ create table my_index.my_table (
                     type: 'CORE_TYPE'
                     value: 'string'
                 c1:
-                    type: 'DICT'
+                    type: 'COLUMN_OPTIONS'
                     c0:
-                        type: 'KEY_VALUE'
+                        type: 'DICT'
                         c0:
-                            type: 'VALUE'
-                            value: 'analyzer'
-                        c1:
-                            type: 'VALUE'
-                            value: 'ik'
+                            type: 'KEY_VALUE'
+                            c0:
+                                type: 'VALUE'
+                                value: 'analyzer'
+                            c1:
+                                type: 'VALUE'
+                                value: 'ik'
             c2:
                 type: 'COLUMN_DEFINE'
                 value: 'birthday'
@@ -192,23 +194,25 @@ create table my_index.my_table (
                     type: 'CORE_TYPE'
                     value: 'date'
                 c1:
-                    type: 'DICT'
+                    type: 'COLUMN_OPTIONS'
                     c0:
-                        type: 'KEY_VALUE'
+                        type: 'DICT'
                         c0:
-                            type: 'VALUE'
-                            value: 'analyzer'
+                            type: 'KEY_VALUE'
+                            c0:
+                                type: 'VALUE'
+                                value: 'analyzer'
+                            c1:
+                                type: 'VALUE'
+                                value: 'ik'
                         c1:
-                            type: 'VALUE'
-                            value: 'ik'
-                    c1:
-                        type: 'KEY_VALUE'
-                        c0:
-                            type: 'VALUE'
-                            value: 'doc_values'
-                        c1:
-                            type: 'VALUE'
-                            value: 'true'
+                            type: 'KEY_VALUE'
+                            c0:
+                                type: 'VALUE'
+                                value: 'doc_values'
+                            c1:
+                                type: 'VALUE'
+                                value: 'true'
     dsl:
         index: 'my_index'
         doc_type: 'my_table'

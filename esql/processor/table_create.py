@@ -4,7 +4,7 @@ from esql.processor import ast, rst, Processor
 
 class TableCreate(Processor):
 
-    mapping = ast.TK.CREATE_TABLE
+    mapping = ast.TK.TOK_CREATE_TABLE
 
     def __init__(self, sql, _ast):
         Processor.__init__(self, sql)

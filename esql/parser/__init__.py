@@ -1,7 +1,7 @@
 from ply.lex import lex
 from ply.yacc import yacc
 
-from esql.parser.ast import lexis, grammar, transform, TK
+from esql.parser.ast import lexis, grammar, TK
 
 lexer = None
 parser = None
@@ -43,4 +43,5 @@ def init(config):
 
 def parse(sql):
     _ast = parser.parse(input=sql, lexer=lexer.clone(), debug=debug)
-    return transform(_ast)  # rst
+    # return transform(_ast)
+    return _ast
