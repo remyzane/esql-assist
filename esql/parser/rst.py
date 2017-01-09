@@ -83,7 +83,9 @@ class TableCreate(Node):
     """
     __slots__ = ('table', 'fields')
 
-    def __init__(self, tree, table: TableName = None, fields: List[FieldDefine] = None):
+    mapping = TK.TOK_CREATE_TABLE
+
+    def __init__(self, tree: Element, table: TableName = None, fields: List[FieldDefine] = None):
         self.table = table
         self.fields = fields or []
 
@@ -92,3 +94,84 @@ class TableCreate(Node):
                 self.table = TableName(child.children)
             elif child.type == TK.TOK_TABLE_COLUMNS:
                 self.fields = FieldsDefine(child.children)
+
+    def dsl(self):
+        dsl = {'index': self.table.index_name,
+               'doc_type': self.table.doc_type,
+               'body': {self.table.doc_type: {}}}
+        dsl['body'][self.table.doc_type]['properties'] = self.fields.dsl()
+        return dsl
+
+
+class SelectField(Node):
+    __slots__ = ('name', 'type', 'params')
+
+    def __init__(self, tree: Element = None):
+        self.name = tree.sub(0).value
+        self.type = tree.sub(0).type
+        if tree.sub(0).type == TK.TOK_FUNCTION:
+            self.params = []
+            for item in tree.sub(0).children:
+                self.params.append(item.value)
+
+    def dsl(self):
+        properties = {}
+        return properties
+
+
+class SelectFields(List[SelectField]):
+
+    def __init__(self, objects):
+        for item in objects:
+            self.append(SelectField(item))
+
+    def dsl(self):
+        properties = {'aaa':1}
+        for item in self:
+            properties[item.name] = item.dsl()
+        return properties
+
+
+class GroupByFields(list):
+
+    def __init__(self, objects):
+        for item in objects:
+            self.append(item.value)
+
+    def dsl(self):
+        properties = {}
+        for item in self:
+            properties[item] = {'terms': {'field': item, 'size': 4096}}
+        return properties
+
+
+class DataSelect(Node):
+    """ Data Query (Select)
+    """
+    __slots__ = ('table', 'select', 'group_by')
+    
+    mapping = TK.TOK_QUERY
+
+    def __init__(self, tree: Element, table: TableName = None, select: List[FieldDefine] = None):
+        self.table = table
+        self.select = select or []
+
+        for child in tree.children:
+            if child.type == TK.TOK_SELECT:
+                self.select = SelectFields(child.children)
+            elif child.type == TK.TOK_FROM:
+                self.table = TableName(child.sub_token(TK.TOK_TABLE_NAME).children)
+            elif child.type == TK.TOK_GROUPBY:
+                self.group_by = GroupByFields(child.children)
+
+    def dsl(self):
+        dsl = {'index': self.table.index_name,
+               'doc_type': self.table.doc_type,
+               '_source': []}
+        for item in self.select:
+            if item.type == TK.TOK_VALUE:
+                dsl['_source'].append(item.name)
+        if hasattr(self, 'group_by'):
+            dsl['aggs'] = self.group_by.dsl()
+
+        return dsl
