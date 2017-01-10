@@ -8,11 +8,9 @@ app = application = Bottle()
 env = Environment()
 
 
-from esql import parser
-from esql.processor import init as processor_init, Processor
+from parser import init, Processor
 
-parser.init(env.config['parser'])
-processor_init()
+init(env.config['parser']['optimize'], env.config['parser']['debug'])
 
 
 @app.route('/es', method=('GET', 'POST'))

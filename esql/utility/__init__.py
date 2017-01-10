@@ -1,21 +1,11 @@
 import os
-import sys
 import json
 import pkgutil
-from enum import Enum
 from copy import deepcopy
 from importlib import import_module
 from collections import Mapping, OrderedDict
 
 POSIX = os.name != 'nt'
-
-
-class AutoNumber(Enum):
-    def __new__(cls):
-        value = len(cls.__members__) + 1
-        obj = object.__new__(cls)
-        obj._value_ = value
-        return obj
 
 
 def multiply(expression):
