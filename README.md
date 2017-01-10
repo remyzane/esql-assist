@@ -1,1 +1,2 @@
-verification https://github.com/unimassystem/EsqlParser/ and https://github.com/unimassystem/esql/
+Has been incorporated into https://github.com/unimassystem/EsqlParser/
+
