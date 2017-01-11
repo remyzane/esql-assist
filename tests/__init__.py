@@ -1,12 +1,39 @@
 import os
+import sys
 import cson
 import pathlib
 from collections import OrderedDict
 
-from esql.utility.configure import load_cson
-from esql import Processor
+esql_parser = os.path.realpath(os.path.join(__file__, '..', '..', 'libs', 'EsqlParser'))
+sys.path.insert(0, esql_parser)
 
+from parser import init
+from ql.parse.ASTNode import Node
+from esql import Processor
+from esql.utility.configure import load_cson
+
+
+init(False, False)
 tests_data_path = os.path.realpath(os.path.join(__file__, '..', 'data'))
+
+
+def _dict(self):
+    """ Generate serializable dict for unit test
+    """
+    from ql.parse.parser import TK
+    name = self.type.name
+    ret = OrderedDict({'type': name[4:] if name.startswith('TOK_') else name})
+
+    if self.value and self.type not in [TK.TOK_DOT, TK.TOK_KEY_VALUE]:
+        ret['value'] = self.value
+
+    if self.children:
+        children_index = 0
+        for item in self.children:
+            ret['c%d' % children_index] = item.dict()
+            children_index += 1
+    return ret
+Node.dict = _dict
 
 
 def get_test_cases(dir_name):
@@ -128,4 +155,3 @@ def check_consistency_dict(source, target, ignores=None, can_ellipsis=False):
         difference = check_consistency(source_value, target[source_key], ignores)
         if difference:
             return difference
-
