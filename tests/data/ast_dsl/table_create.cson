@@ -1,4 +1,4 @@
-'explain create table my_index.my_table (id string, name integer);':
+'EXPLAIN CREATE TABLE my_index.my_table (id STRING, name integer);':
     ast:
         type: 'EXPLAIN'
         c0:
@@ -40,13 +40,13 @@
         index: 'my_index'
 
 '''
-create table my_index.my_table (
-    id string, name string,
-    sub object as (
-        sub object as (),
-        sub2 object as (
-            id string, name string,
-            sub object as ()
+CREATE TABLE my_index.my_table (
+    id STRING, name STRING,
+    sub OBJECT as (
+        sub OBJECT as (),
+        sub2 OBJECT as (
+            id STRING, name STRING,
+            sub OBJECT as ()
         )
     )
 );''':
@@ -146,10 +146,10 @@ create table my_index.my_table (
                                         type: 'string'
 
 '''
-create table my_index.my_table (
-    id string,
-    name string (analyzer=ik),
-    birthday date (analyzer=ik, doc_values=true)
+CREATE TABLE my_index.my_table (
+    id STRING,
+    name STRING (analyzer=ik),
+    birthday DATE (analyzer=ik, doc_values=true)
 );''':
     ast:
         type: 'CREATE_TABLE'

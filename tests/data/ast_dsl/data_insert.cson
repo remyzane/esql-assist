@@ -1,4 +1,4 @@
-'''insert into my_index.my_table(id, name, obj) values (1001, 'unimas', {address='zhejiang', post_code='330010'});''':
+'''INSERT INTO my_index.my_table(id, name, obj) VALUES (1001, 'unimas', {address='zhejiang', post_code='330010'});''':
     ast:
         type: 'INSERT_INTO'
         c0:
@@ -58,11 +58,3 @@
                 address: 'zhejiang'
                 post_code: '330010'
             name: 'unimas'
-
-# "body": 
-#     "obj": "\"address\":\"zhejiang\", \"post_code\":\"330010\"", 
-#     "id": 1001, 
-#     "name": "unimas"
-# , 
-# "index": "my_index", 
-# "doc_type": "my_table"

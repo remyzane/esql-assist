@@ -1,5 +1,5 @@
 
-'select field_1, count(*) as ct from my_index.my_table group by field_1;':
+'SELECT field_1, count(*) AS ct FROM my_index.my_table GROUP BY field_1;':
     ast:
         type: 'QUERY'
         c0:
@@ -48,63 +48,122 @@
                 terms:
                     field: 'field_1'
                     size: 4096
-        
 
+'''
+SELECT * FROM my_index.my_table
+WHERE
+    name LIKE 'john *' AND
+    age BETWEEN 20 AND 30 AND
+    (hotel = 'hanting' OR flight = 4510);
+''':
+    ast: 
+        type: 'QUERY'
+        c0:
+            type: 'SELECT'
+            c0:
+                type: 'SELEXPR'
+                c0:
+                    type: 'VALUE'
+                    value: '*'
+        c1:
+            type: 'FROM'
+            c0:
+                type: 'TABLE_NAME'
+                c0:
+                    type: 'DOT'
+                    c0:
+                        type: 'VALUE'
+                        value: 'my_index'
+                    c1:
+                        type: 'VALUE'
+                        value: 'my_table'
+        c2:
+            type: 'WHERE'
+            c0:
+                type: 'COMPLEX'
+                value: 'and'
+                c0:
+                    type: 'COMPLEX'
+                    value: 'and'
+                    c0:
+                        type: 'COMPARE'
+                        value: 'like'
+                        c0:
+                            type: 'VALUE'
+                            value: 'name'
+                        c1:
+                            type: 'VALUE'
+                            value: 'john *'
+                    c1:
+                        type: 'FUNCTION'
+                        value: 'between'
+                        c0:
+                            type: 'VALUE'
+                            value: 'age'
+                        c1:
+                            type: 'VALUE'
+                            value: '20'
+                        c2:
+                            type: 'VALUE'
+                            value: '30'
+                c1:
+                    type: 'COMPLEX'
+                    value: 'or'
+                    c0:
+                        type: 'COMPARE'
+                        value: '='
+                        c0:
+                            type: 'VALUE'
+                            value: 'hotel'
+                        c1:
+                            type: 'VALUE'
+                            value: 'hanting'
+                    c1:
+                        type: 'COMPARE'
+                        value: '='
+                        c0:
+                            type: 'VALUE'
+                            value: 'flight'
+                        c1:
+                            type: 'VALUE'
+                            value: '4510'
+    dsl:
+        index: 'my_index'
+        doc_type: 'my_table'
+        _source: ['*']
+        query:
+            bool:
+                must: [
+                    {
+                        bool:
+                            must: [
+                                {
+                                    wildcard:
+                                        name: 'john *'
+                                }
+                                {
+                                    range:
+                                        age:
+                                            gte: '20'
+                                            lte: '30'
+                                }
+                            ]
+                    }
+                    {
+                        bool:
+                            should: [
+                                {
+                                    query_string:
+                                        hotel: 'hanting'
+                                }
+                                {
+                                    query_string:
+                                        flight: '4510'
+                                }
+                            ]
+                    }
+                ]
 
-# {
-#     "sort": {}, 
-#     "_source": [
-#         "field_1"
-#     ], 
-#     "fields": [
-#         "_parent"
-#     ], 
-#     "aggs": {
-#         "field_1": {
-#             "terms": {
-#                 "field": "field_1", 
-#                 "size": 4096
-#             }, 
-#             "aggs": {}
-#         }
-#     }, 
-#     "highlight": {}, 
-#     "query": {
-#         "match_all": {}
-#     }
-# }
-
-# 'select count(*) from my_index.my_table group by age;':
-#     ast: 
-#         type: 'QUERY'
-#         c0:
-#             type: 'SELECT'
-#             c0:
-#                 type: 'SELEXPR'
-#                 c0:
-#                     type: 'FUNCTION'
-#                     value: 'count'
-#                     c0:
-#                         type: 'VALUE'
-#                         value: '*'
-#         c1:
-#             type: 'FROM'
-#             c0:
-#                 type: 'TABLE_NAME'
-#                 c0:
-#                     type: 'DOT'
-#                     c0:
-#                         type: 'VALUE'
-#                         value: 'my_index'
-#                     c1:
-#                         type: 'VALUE'
-#                         value: 'my_table'
-#         c2:
-#             type: 'GROUPBY'
-#             c0:
-#                 type: 'VALUE'
-#                 value: 'age'
-#     dsl: ''
 
 # '':
 #     ast: ''
