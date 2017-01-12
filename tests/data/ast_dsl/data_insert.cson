@@ -1,1 +1,68 @@
-{}
+'''insert into my_index.my_table(id, name, obj) values (1001, 'unimas', {address='zhejiang', post_code='330010'});''':
+    ast:
+        type: 'INSERT_INTO'
+        c0:
+            type: 'TABLE_NAME'
+            c0:
+                type: 'DOT'
+                c0:
+                    type: 'VALUE'
+                    value: 'my_index'
+                c1:
+                    type: 'VALUE'
+                    value: 'my_table'
+        c1:
+            type: 'INSERT_COLUMNS'
+            c0:
+                type: 'VALUE'
+                value: 'id'
+            c1:
+                type: 'VALUE'
+                value: 'name'
+            c2:
+                type: 'VALUE'
+                value: 'obj'
+        c2:
+            type: 'INSERT_ROW'
+            c0:
+                type: 'VALUE'
+                value: '1001'
+            c1:
+                type: 'VALUE'
+                value: 'unimas'
+            c2:
+                type: 'DICT'
+                c0:
+                    type: 'KEY_VALUE'
+                    c0:
+                        type: 'VALUE'
+                        value: 'address'
+                    c1:
+                        type: 'VALUE'
+                        value: 'zhejiang'
+                c1:
+                    type: 'KEY_VALUE'
+                    c0:
+                        type: 'VALUE'
+                        value: 'post_code'
+                    c1:
+                        type: 'VALUE'
+                        value: '330010'
+
+    dsl: 
+        index: 'my_index'
+        doc_type: 'my_table'
+        body:
+            id: '1001'
+            obj:
+                address: 'zhejiang'
+                post_code: '330010'
+            name: 'unimas'
+
+# "body": 
+#     "obj": "\"address\":\"zhejiang\", \"post_code\":\"330010\"", 
+#     "id": 1001, 
+#     "name": "unimas"
+# , 
+# "index": "my_index", 
+# "doc_type": "my_table"

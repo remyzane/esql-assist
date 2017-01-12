@@ -28,6 +28,9 @@ def _dict(self):
         ret['value'] = self.value
 
     if self.children:
+        # ret['children'] = []
+        # for item in self.children:
+        #     ret['children'].append(item.dict())
         children_index = 0
         for item in self.children:
             ret['c%d' % children_index] = item.dict()
