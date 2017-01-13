@@ -1,5 +1,10 @@
-
-'SELECT field_1, count(*) AS ct FROM my_index.my_table GROUP BY field_1;':
+'''
+SELECT
+    field_1,
+    count(*) AS ct
+FROM my_index.my_table
+GROUP BY field_1;
+''':
     ast:
         type: 'QUERY'
         c0:
@@ -40,14 +45,57 @@
     dsl:
         index: 'my_index'
         doc_type: 'my_table'
-        _source: [
-            'field_1'
-        ]
+        _source: ['field_1']
         aggs:
             field_1:
                 terms:
                     field: 'field_1'
                     size: 4096
+
+'''
+SELECT * FROM my_index
+WHERE
+    name LIKE 'john *';
+''':
+    ast:
+        type: 'QUERY'
+        c0:
+            type: 'SELECT'
+            c0:
+                type: 'SELEXPR'
+                c0:
+                    type: 'VALUE'
+                    value: '*'
+        c1:
+            type: 'FROM'
+            c0:
+                type: 'TABLE_NAME'
+                c0:
+                    type: 'VALUE'
+                    value: 'my_index'
+        c2:
+            type: 'WHERE'
+            c0:
+                type: 'COMPARE'
+                value: 'like'
+                c0:
+                    type: 'VALUE'
+                    value: 'name'
+                c1:
+                    type: 'VALUE'
+                    value: 'john *'
+    dsl:
+        index: 'my_index'
+        doc_type: null
+        _source: ['*']
+        query:
+            bool:
+                must: [
+                    {
+                        wildcard:
+                            name: 'john *'
+                    }
+                ]
 
 '''
 SELECT * FROM my_index.my_table

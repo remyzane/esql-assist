@@ -21,4 +21,4 @@ def execute():
     sql = request_data.get('sql')
     return Processor.execute(sql)
 
-# print(execute('create table table_name.info (a string, b integer);'))
+# print(Processor.execute('create table table_name.info (a string, b integer);'))
