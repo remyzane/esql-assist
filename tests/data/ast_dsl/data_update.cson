@@ -1,0 +1,104 @@
+'''UPDATE my_index.my_table SET name = 'lisi' WHERE _id = 330111111;''':
+    ast:
+        type: 'UPDATE'
+        c0:
+            type: 'TABLE_NAME'
+            c0:
+                type: 'DOT'
+                c0:
+                    type: 'VALUE'
+                    value: 'my_index'
+                c1:
+                    type: 'VALUE'
+                    value: 'my_table'
+        c1:
+            type: 'SET_COLUMNS_CLAUSE'
+            c0:
+                type: 'KEY_VALUE'
+                c0:
+                    type: 'VALUE'
+                    value: 'name'
+                c1:
+                    type: 'VALUE'
+                    value: 'lisi'
+        c2:
+            type: 'WHERE'
+            c0:
+                type: 'COMPARE'
+                value: '='
+                c0:
+                    type: 'VALUE'
+                    value: '_id'
+                c1:
+                    type: 'VALUE'
+                    value: '330111111'
+
+'''
+UPDATE my_index SET 
+    name = 'lisi',
+    age = 30,
+    address = {
+        address = 'shanghai',
+        post_code = '330010'
+    }
+WHERE _id = 330111111;
+''':
+    ast:
+        type: 'UPDATE'
+        c0:
+            type: 'TABLE_NAME'
+            c0:
+                type: 'VALUE'
+                value: 'my_index'
+        c1:
+            type: 'SET_COLUMNS_CLAUSE'
+            c0:
+                type: 'KEY_VALUE'
+                c0:
+                    type: 'VALUE'
+                    value: 'name'
+                c1:
+                    type: 'VALUE'
+                    value: 'lisi'
+            c1:
+                type: 'KEY_VALUE'
+                c0:
+                    type: 'VALUE'
+                    value: 'age'
+                c1:
+                    type: 'VALUE'
+                    value: '30'
+            c2:
+                type: 'KEY_VALUE'
+                c0:
+                    type: 'VALUE'
+                    value: 'address'
+                c1:
+                    type: 'DICT'
+                    c0:
+                        type: 'KEY_VALUE'
+                        c0:
+                            type: 'VALUE'
+                            value: 'address'
+                        c1:
+                            type: 'VALUE'
+                            value: 'shanghai'
+                    c1:
+                        type: 'KEY_VALUE'
+                        c0:
+                            type: 'VALUE'
+                            value: 'post_code'
+                        c1:
+                            type: 'VALUE'
+                            value: '330010'
+        c2:
+            type: 'WHERE'
+            c0:
+                type: 'COMPARE'
+                value: '='
+                c0:
+                    type: 'VALUE'
+                    value: '_id'
+                c1:
+                    type: 'VALUE'
+                    value: '330111111'
